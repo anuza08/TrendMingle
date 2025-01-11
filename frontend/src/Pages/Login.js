@@ -1,7 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 
 const Login = () => {
-  return <div>Login</div>;
+  const [loginInfo, setLoginInfo] = useState({
+    email: "",
+    password: "",
+  });
+
+  const handleChange = (e) => {
+    
+  }
+  return <></>;
 };
 
 export default Login;
