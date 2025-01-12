@@ -1,38 +1,45 @@
-const UserModel = require("../Models/User");
 const bcrypt = require("bcrypt");
+const UserModel = require("../Models/User");
 const jwt = require("jsonwebtoken");
 
-const signUp = async (req, res) => {
+const signup = async (req, res) => {
   try {
     const { name, email, password } = req.body;
-    const user = await UserModel.fIndOne({ email });
+    const user = await UserModel.findOne({ email });
     if (user) {
       return res.status(409).json({
-        message: "User already exsit",
+        message: "User is already exsit, you can login",
         success: false,
       });
     }
     const userModel = new UserModel({ name, email, password });
     userModel.password = await bcrypt.hash(password, 10);
     await userModel.save();
-    res.status(201).json({ message: "SignUp successfully", success: true });
+    res.status(201).json({ message: "Signup successfully", success: true });
   } catch (err) {
+    console.log(err);
+
     res.status(500).json({ message: "Internal server error", success: false });
   }
 };
 
 const login = async (req, res) => {
   try {
-    const { name, email, password } = req.body;
-    const user = await UserModel.fIndOne({ email });
-    const errorMessage = "Authentication failed. User or password is wrong";
+    const { email, password } = req.body;
+    const user = await UserModel.findOne({ email });
+    const errorMsg = "Auth failed. User or message is wrong";
     if (!user) {
-      return res.status(403).json({ message: errorMessage, success: true });
+      return res.status(403).json({
+        message: errorMsg,
+        success: false,
+      });
     }
     const isPasswordEqual = await bcrypt.compare(password, user.password);
+    // userModel.password = await bcrypt.hash(password, 10);
+    // await userModel.save();
     if (!isPasswordEqual) {
       return res.status(403).json({
-        message: errorMessage,
+        message: errorMsg,
         success: false,
       });
     }
@@ -42,25 +49,22 @@ const login = async (req, res) => {
         _id: user._id,
       },
       process.env.JWT_SECRET,
-      { expiresIn: "48h" }
+      { expiresIn: "24h" }
     );
 
     res.status(201).json({
-      message: "Login Successfull",
+      message: "Login successfully",
       success: true,
       jwtToken,
       email,
       name: user.name,
     });
-  } catch (error) {
-    res.status(500).json({
-      message: "Internal server error",
-      success: false,
-    });
+  } catch (err) {
+    res.status(500).json({ message: "Internal server error", success: true });
   }
 };
 
 module.exports = {
-  signUp,
+  signup,
   login,
 };

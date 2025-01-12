@@ -1,11 +1,21 @@
-const { login, signUp } = require("../Controller/AuthController");
+// const { signup, login } = require("../Controllers/AuthController");
+// const {
+//   signupValidation,
+//   loginValidation,
+// } = require("../Middleware/AuthValidation");
+
+// const { sign } = require("jsonwebtoken");
+const { login, signup } = require("../Controller/AuthController");
 const {
   loginValidation,
-  SignUpValidation,
+  signupValidation,
 } = require("../Middleware/AuthValidation");
 
 const router = require("express").Router();
-router.post("/login", loginValidation, login);
-router.post("/signup", SignUpValidation, signUp);
 
+// router.post("/login", loginValidation, login);
+router.post("/login", loginValidation, login);
+// router.post("/signup", signupValidation, signup);
+router.post("/signup", signupValidation, signup);
+// router.get("/products", productAuth);
 module.exports = router;
