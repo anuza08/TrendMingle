@@ -4,6 +4,10 @@ import { useEffect } from "react";
 import Login from "./Pages/Login";
 import Signup from "./Pages/Signup";
 import Home from "./Pages/Home";
+import Navbar from "./Pages/Navbar";
+import About from "./Pages/About";
+import Contact from "./Pages/Contact";
+import Collection from "./Pages/Collection";
 function App() {
   useEffect(() => {
     const link = document.createElement("link");
@@ -15,12 +19,15 @@ function App() {
   return (
     <>
       <div>
-        {/* <h1>Authentication Application</h1> */}
+        <Navbar />
         <Routes>
           <Route path="/" element={<Navigate to="/home" />} />
           <Route path="/home" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />
+          <Route path="/about" element={<About />} />
+          <Route path="/contact" element={<Contact />} />
+          <Route path="/collection" element={<Collection />} />
         </Routes>
       </div>
     </>
