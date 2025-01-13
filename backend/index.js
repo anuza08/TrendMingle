@@ -7,7 +7,7 @@ const bodyParser = require("body-parser");
 const PORT = process.env.PORT || 8080;
 const AuthRo = require("./Routes/Authrouter");
 const ProductAuth = require("./Middleware/ProductAuth");
-
+const adminRouter = require("./Routes/adminRouter");
 app.use(bodyParser.json());
 const cors = require("cors");
 
@@ -21,5 +21,6 @@ app.use(cors(corsOptions));
 
 app.use("/auth", AuthRo);
 app.use("/products", ProductAuth);
+app.use("/admin", adminRouter);
 
 app.listen(PORT, () => console.log(`server is running on ${PORT}`));

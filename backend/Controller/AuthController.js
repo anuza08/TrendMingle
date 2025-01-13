@@ -35,8 +35,6 @@ const login = async (req, res) => {
       });
     }
     const isPasswordEqual = await bcrypt.compare(password, user.password);
-    // userModel.password = await bcrypt.hash(password, 10);
-    // await userModel.save();
     if (!isPasswordEqual) {
       return res.status(403).json({
         message: errorMsg,
