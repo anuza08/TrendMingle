@@ -1,0 +1,133 @@
+Entities and Attributes:
+Admin
+
+AdminID (Primary Key)
+Name
+Email
+Password
+User
+
+UserID (Primary Key)
+Name
+Email
+Password
+Product
+
+ProductID (Primary Key)
+Name
+Description
+Price
+StockQuantity
+Cart
+
+CartID (Primary Key)
+UserID (Foreign Key)
+CartItem
+
+CartItemID (Primary Key)
+CartID (Foreign Key)
+ProductID (Foreign Key)
+Quantity
+Order
+
+OrderID (Primary Key)
+UserID (Foreign Key)
+TotalAmount
+OrderDate
+Status
+OrderItem
+
+OrderItemID (Primary Key)
+OrderID (Foreign Key)
+ProductID (Foreign Key)
+Quantity
+Price
+
+
+Relationships:
+Admin can view and manage all orders:
+Admin → manages → Order
+
+User can add products to the cart:
+User → owns → Cart
+Cart → contains → CartItem
+CartItem → links → Product
+
+User can place an order:
+User → places → Order
+Order → contains → OrderItem
+OrderItem → links → Product
+
+
+
+from eralchemy import render_er
+
+# Define the ERD diagram in a textual representation
+erd = """
+[Admin] {
+    AdminID: int (PK)
+    Name: varchar
+    Email: varchar
+    Password: varchar
+}
+
+[User] {
+    UserID: int (PK)
+    Name: varchar
+    Email: varchar
+    Password: varchar
+}
+
+[Product] {
+    ProductID: int (PK)
+    Name: varchar
+    Description: text
+    Price: float
+    StockQuantity: int
+}
+
+[Cart] {
+    CartID: int (PK)
+    UserID: int (FK)
+}
+
+[CartItem] {
+    CartItemID: int (PK)
+    CartID: int (FK)
+    ProductID: int (FK)
+    Quantity: int
+}
+
+[Order] {
+    OrderID: int (PK)
+    UserID: int (FK)
+    TotalAmount: float
+    OrderDate: date
+    Status: varchar
+    ShippingAddress: text
+    PaymentMethod: varchar
+}
+
+[OrderItem] {
+    OrderItemID: int (PK)
+    OrderID: int (FK)
+    ProductID: int (FK)
+    Quantity: int
+    Price: float
+}
+
+Admin manages Order
+User places Order
+Order contains OrderItem
+User owns Cart
+Cart contains CartItem
+CartItem links Product
+OrderItem links Product
+"""
+
+# Generate the ER diagram and save it as an image
+output_path = "/mnt/data/Ecommerce_ERD.png"
+render_er(erd, output_path)
+
+output_path
+

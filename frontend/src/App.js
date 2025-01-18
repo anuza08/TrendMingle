@@ -8,6 +8,9 @@ import Navbar from "./Pages/Navbar";
 import About from "./Pages/About";
 import Contact from "./Pages/Contact";
 import Collection from "./Pages/Collection";
+import AdminLogin from "./Pages/Admin/Auth/AdminLogin";
+import AdminSignUp from "./Pages/Admin/Auth/AdminSignUp";
+import AdminDashboard from "./Pages/Admin/AdminDashbord";
 function App() {
   useEffect(() => {
     const link = document.createElement("link");
@@ -28,6 +31,11 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/collection" element={<Collection />} />
+          <Route path="/admin/*">
+            <Route path="login" element={<AdminLogin />} />
+            <Route path="signup" element={<AdminSignUp />} />
+            <Route path="dashboard" element={<AdminDashboard />} />
+          </Route>
         </Routes>
       </div>
     </>
