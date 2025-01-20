@@ -1,6 +1,6 @@
 import "./App.css";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 import Login from "./Pages/Login";
 import Signup from "./Pages/Signup";
 import Home from "./Pages/Home";
@@ -11,7 +11,10 @@ import Collection from "./Pages/Collection";
 import AdminLogin from "./Pages/Admin/Auth/AdminLogin";
 import AdminSignUp from "./Pages/Admin/Auth/AdminSignUp";
 import AdminDashboard from "./Pages/Admin/AdminDashbord";
+import { useSelector } from "react-redux";
 function App() {
+  const { role } = useSelector((state) => state.user);
+  console.log(role);
   useEffect(() => {
     const link = document.createElement("link");
     link.rel = "stylesheet";
@@ -19,12 +22,21 @@ function App() {
       "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap";
     document.head.appendChild(link);
   }, []);
+
   return (
     <>
       <div>
-        <Navbar />
+        {role === "user" && <Navbar />}
         <Routes>
-          <Route path="/" element={<Navigate to="/home" />} />
+          {role === "user" && (
+            <Route path="*" element={<Navigate to="/home" replace />} />
+          )}
+          {role === "admin" && (
+            <Route
+              path="*"
+              element={<Navigate to="/admin/dashboard" replace />}
+            />
+          )}
           <Route path="/home" element={<Home />} />
           <Route path="/login" element={<Login />} />
           <Route path="/signup" element={<Signup />} />

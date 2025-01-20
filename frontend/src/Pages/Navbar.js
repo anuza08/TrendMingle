@@ -1,7 +1,29 @@
-import React from "react";
+import React, { useEffect } from "react";
 import logo from "../Assests/logo.png";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
+import { useState } from "react";
 const Navbar = () => {
+  const [loggedInUser, setLoggedInUser] = useState("");
+  const [roleType, setRoleType] = useState(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    setLoggedInUser(localStorage.getItem("loggedInUser"));
+    setRoleType(localStorage.getItem("role"));
+  });
+
+  const handleLogout = (e) => {
+    localStorage.removeItem("jwtToken");
+    localStorage.removeItem("loggedInUser");
+    localStorage.removeItem("role");
+    setTimeout(() => {
+      if (roleType === "admin") {
+        navigate("/auth/login");
+      } else {
+        navigate("/login");
+      }
+    }, 1000);
+  };
   return (
     <nav class="bg-white shadow">
       <div class="mx-auto max-w-7xl px-2 sm:px-6 lg:px-8">
@@ -176,10 +198,11 @@ const Navbar = () => {
                 </a>
                 <a
                   href="#"
-                  class="block px-4 py-2 text-sm text-gray-700"
+                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 rounded-lg"
                   role="menuitem"
                   tabindex="-1"
                   id="user-menu-item-2"
+                  onClick={handleLogout}
                 >
                   Log out
                 </a>

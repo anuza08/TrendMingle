@@ -14,15 +14,24 @@ const adminSignup = async (req, res) => {
     }
 
     const hashedPassword = await bcrypt.hash(password, 10);
-    const newAdmin = new AdminModel({ name, email, password: hashedPassword });
+    const newAdmin = new AdminModel({
+      name,
+      email,
+      password: hashedPassword,
+      role: "admin",
+    });
     await newAdmin.save();
 
-    res
-      .status(201)
-      .json({ message: "Admin registered successfully", success: true });
+    res.status(201).json({
+      message: "Admin registered successfully",
+      success: true,
+      name: newAdmin.name,
+      email: newAdmin.email,
+      role: newAdmin.role,
+    });
   } catch (err) {
     console.error(err);
-    res.status(500).json({ message: "Internal server error", success: false });
+    res.status(500).json({ message: err, success: false });
   }
 };
 
@@ -51,7 +60,8 @@ const adminLogin = async (req, res) => {
       message: "Admin login successful",
       success: true,
       jwtToken,
-      email,
+      email: admin.email,
+      role: admin.role,
       name: admin.name,
     });
   } catch (err) {

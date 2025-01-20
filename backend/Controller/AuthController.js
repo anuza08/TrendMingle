@@ -12,10 +12,16 @@ const signup = async (req, res) => {
         success: false,
       });
     }
-    const userModel = new UserModel({ name, email, password });
+    const userModel = new UserModel({ name, email, password, role: "user" });
     userModel.password = await bcrypt.hash(password, 10);
     await userModel.save();
-    res.status(201).json({ message: "Signup successfully", success: true });
+    res.status(201).json({
+      message: "Signup successfully",
+      success: true,
+      name: userModel.name,
+      email: userModel.email,
+      role: userModel.role,
+    });
   } catch (err) {
     console.log(err);
 
@@ -54,7 +60,8 @@ const login = async (req, res) => {
       message: "Login successfully",
       success: true,
       jwtToken,
-      email,
+      email: user.email,
+      role: user.role,
       name: user.name,
     });
   } catch (err) {

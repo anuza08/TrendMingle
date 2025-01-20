@@ -2,6 +2,8 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { handleError, handleSuccess } from "../../../Utils";
 import { ToastContainer } from "react-toastify";
+import { useDispatch } from "react-redux";
+import { setAdminData } from "../../../redux/slices/adminSlice";
 
 const AdminLogin = () => {
   const [adminLoginInfo, setAdminLoginInfo] = useState({
@@ -10,6 +12,8 @@ const AdminLogin = () => {
   });
 
   const Navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     const copyLoginInfo = { ...adminLoginInfo };
@@ -35,6 +39,9 @@ const AdminLogin = () => {
       const response = await result.json();
       const { success, message, error } = response;
       if (success) {
+        dispatch(setAdminData(response));
+        localStorage.setItem("loggedInUser", response.name);
+        localStorage.setItem("jwtToken", response.jwtToken);
         handleSuccess("Login successfull");
         setTimeout(() => {
           Navigate("/admin/dashboard");

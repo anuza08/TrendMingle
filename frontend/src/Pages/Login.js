@@ -2,12 +2,16 @@ import React, { useState } from "react";
 import { ToastContainer } from "react-toastify";
 import { useNavigate, Link } from "react-router-dom";
 import { handleError, handleSuccess } from "../Utils";
+import { useDispatch } from "react-redux";
+import { setCurrentUser } from "../redux/slices/userSlice";
 const Login = () => {
   const [loginInfo, setLoginInfo] = useState({
     email: "",
     password: "",
   });
   const Navigate = useNavigate();
+  const dispatch = useDispatch();
+
   const handleChange = (e) => {
     const { name, value } = e.target;
     const copyLoginInfo = { ...loginInfo };
@@ -30,8 +34,18 @@ const Login = () => {
         body: JSON.stringify(loginInfo),
       });
       const response = await result.json();
-      const { success, messsage, error } = response;
+      const { success, messsage, error, role } = response;
+
       if (success) {
+        dispatch(
+          setCurrentUser({
+            userData: response,
+            role: role,
+          })
+        );
+        localStorage.setItem("loggedInUser", response.name);
+        localStorage.setItem("jwtToken", response.jwtToken);
+        localStorage.setItem("role", response.role);
         handleSuccess(messsage);
         setTimeout(() => {
           Navigate("/home");
