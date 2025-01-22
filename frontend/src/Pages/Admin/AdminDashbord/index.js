@@ -50,7 +50,7 @@ const AdminDashboard = () => {
     <div className="flex h-screen">
       <div className="w-64 bg-gray-800 text-white p-5 flex flex-col">
         <h1 className="text-2xl font-bold mb-6 text-center">Admin Dashboard</h1>
-        <p className="mb-6 text-sm text-gray-400">Welcome, {loggedInUser}</p>
+        <p className="mb-6 text-sm text-gray-400">Admin Panel</p>
         <nav className="flex-grow">
           {["addProduct", "itemList", "updateShipping"].map((tab) => (
             <button

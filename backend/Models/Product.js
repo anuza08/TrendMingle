@@ -21,12 +21,24 @@ const ProductSchema = new Schema({
     type: String,
     required: true,
   },
+  subCategory: {
+    type: String,
+    required: true,
+  },
   gender: {
     type: String,
     required: true,
   },
+  sizes: {
+    type: [String],
+    require: true,
+  },
   stock: {
     type: Number,
+    required: true,
+  },
+  isBestseller: {
+    type: Boolean,
     required: true,
   },
 });
