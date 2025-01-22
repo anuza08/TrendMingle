@@ -2,16 +2,16 @@ const ProductAuth = require("../Middleware/ProductAuth");
 
 const router = require("express").Router();
 
-router.get("/", ProductAuth, req, (res) => {
-  res.status(200).json([
-    {
-      name: "mobile",
-      price: 2000,
-    },
-    {
-      name: "tv",
-      price: 24000,
-    },
-  ]);
-});
+const {
+  addProduct,
+  getAllProduct,
+  getProductById,
+} = require("../Controller/ProductController");
+
+router.post("/add", ProductAuth, addProduct);
+
+router.get("/", getAllProduct);
+
+router.get("/:id", getProductById);
+
 module.exports = router;

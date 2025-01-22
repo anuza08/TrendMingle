@@ -71,7 +71,6 @@ const AdminLogin = () => {
             Login
           </h1>
           <div>
-            {/* <label>Email</label> */}
             <input
               type="email"
               name="email"
@@ -83,14 +82,12 @@ const AdminLogin = () => {
             />
           </div>
           <div>
-            {/* <label>Password</label> */}
             <input
               value={adminLoginInfo.password}
               name="password"
               type="password"
               onChange={handleChange}
               placeholder="Password"
-              // autoFocus
               className="w-full p-3 rounded border border-black  mb-7 text-black focus:outline-none focus:right-2 foucs:ring-blue-500 font-roboto"
             />
           </div>

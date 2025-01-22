@@ -1,4 +1,8 @@
 import React, { useState } from "react";
+import { useDispatch } from "react-redux";
+import { setCurrentProduct } from "../../../../redux/slices/productSlice";
+import { handleError } from "../../../../Utils";
+import { toast } from "react-toastify";
 
 const AddProduct = () => {
   const [productName, setProductName] = useState("");
@@ -10,7 +14,8 @@ const AddProduct = () => {
   const [stock, setStock] = useState("");
   const [sizes, setSizes] = useState([]);
   const [isBestseller, setIsBestseller] = useState(false);
-
+  const dispatch = useDispatch();
+  const jwtToken = localStorage.getItem("jwtToken");
   const handleSizeToggle = (size) => {
     setSizes((prev) =>
       prev.includes(size) ? prev.filter((s) => s !== size) : [...prev, size]
@@ -23,11 +28,11 @@ const AddProduct = () => {
     setImageUrl((prev) => [...prev, ...urls].slice(0, 4));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     const productData = {
-      productName,
-      productDescription,
+      productName: productName,
+      productDescription: productDescription,
       price,
       imageUrl,
       category,
@@ -36,7 +41,40 @@ const AddProduct = () => {
       stock,
       isBestseller,
     };
-    console.log("Product Data:", productData);
+    try {
+      const url = "http://localhost:8080/products/add";
+      const result = await fetch(url, {
+        method: "POST",
+        headers: {
+          "Content-type": "application/json",
+          Authorization: `Bearer ${jwtToken}`,
+        },
+        body: JSON.stringify(productData),
+      });
+      console.log(`Bearer ${jwtToken}`);
+      const response = await result.json();
+      const { success, message, error } = response;
+      if (success) {
+        toast.success("Product added successfully");
+        console.log("successfully added product");
+        dispatch(setCurrentProduct(response));
+      } else if (!success) {
+        handleError(message);
+      } else if (error) {
+        handleError(error);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+    setProductDescription("");
+    setProductName("");
+    setCategory("");
+    setImageUrl([]);
+    setSubCategory("");
+    setPrice("");
+    setStock("");
+    setSizes([]);
+    setIsBestseller(false);
   };
 
   return (
@@ -161,7 +199,7 @@ const AddProduct = () => {
         type="submit"
         className="w-full py-2 bg-[#EFB6C8] text-gray-700 font-semibold rounded-md hover:text-white"
       >
-        Submit
+        Add Product
       </button>
     </form>
   );

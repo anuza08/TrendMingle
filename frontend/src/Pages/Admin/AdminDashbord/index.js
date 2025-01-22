@@ -9,6 +9,7 @@ const AdminDashboard = () => {
   const navigate = useNavigate();
   const loggedInUser = localStorage.getItem("loggedInUser");
   const roleType = localStorage.getItem("role");
+  const jwtToken = localStorage.getItem("jwtToken");
 
   const handleLogout = () => {
     ["jwtToken", "loggedInUser", "role"].forEach((item) =>
@@ -21,7 +22,7 @@ const AdminDashboard = () => {
     const components = {
       addProduct: (
         <div>
-          <AddProduct />
+          <AddProduct token={jwtToken} />
         </div>
       ),
       itemList: (
