@@ -6,7 +6,6 @@ require("dotenv").config();
 const bodyParser = require("body-parser");
 const PORT = process.env.PORT || 8080;
 const AuthRo = require("./Routes/Authrouter");
-// const ProductAuth = require("./Middleware/ProductAuth");
 const ProductRouter = require("./Routes/ProductRouter");
 const adminRouter = require("./Routes/adminRouter");
 app.use(bodyParser.json());

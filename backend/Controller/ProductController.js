@@ -1,4 +1,11 @@
+const cloudinary = require("cloudinary").v2;
 const ProductModel = require("../Models/Product");
+
+cloudinary.config({
+  cloud_name: "dpwugcpvq",
+  api_key: "663984361978425",
+  api_secret: "RNaxCNmlQLxHm6FB-qgE3OXjp0Q",
+});
 
 const addProduct = async (req, res) => {
   try {
@@ -6,21 +13,34 @@ const addProduct = async (req, res) => {
       productName,
       productDescription,
       price,
-      imageUrl,
       category,
       subCategory,
       gender,
       sizes,
       stock,
+      imageUrl,
       isBestseller,
     } = req.body;
-    console.log({ productName, productDescription, price, imageUrl });
+
+    let imageUrls = [];
+
+    if (req.files) {
+      for (let file of req.files.image1) {
+        const uploadedImage = await cloudinary.uploader.upload(file.path, {
+          folder: "product_images",
+        });
+        imageUrls.push(uploadedImage.secure_url);
+      }
+    }
+    if (imageUrl && imageUrl.length > 0) {
+      imageUrls = imageUrl;
+    }
 
     const newProduct = new ProductModel({
       productName,
       productDescription,
       price,
-      imageUrl,
+      imageUrl: imageUrls,
       category,
       subCategory,
       gender,
@@ -46,7 +66,7 @@ const getAllProduct = async (req, res) => {
     const products = await ProductModel.find();
     res.status(200).json({
       products,
-      message: "fetched product data successfully",
+      message: "Fetched product data successfully",
       success: true,
     });
   } catch (error) {
@@ -54,23 +74,24 @@ const getAllProduct = async (req, res) => {
     res.status(500).json({
       message: error,
       success: false,
-      message: "Error in fetching data",
     });
   }
 };
 
-const getProductById = (req, res) => {
+const getProductById = async (req, res) => {
   try {
     const { id } = req.params;
-    const product = ProductModel.fintdById(id);
+    const product = await ProductModel.findById(id);
     if (!product) {
       return res
         .status(404)
-        .json({ message: "Error fetching product", error, success: false });
+        .json({ message: "Product not found", success: false });
     }
-    res
-      .status(200)
-      .json({ product, message: "Product fetched succesfully", success: true });
+    res.status(200).json({
+      product,
+      message: "Product fetched successfully",
+      success: true,
+    });
   } catch (error) {
     console.error("Error fetching product", error);
     res.status(500).json({ message: error, success: false });

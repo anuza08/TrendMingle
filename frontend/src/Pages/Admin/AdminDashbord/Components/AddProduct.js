@@ -4,6 +4,9 @@ import { setCurrentProduct } from "../../../../redux/slices/productSlice";
 import { handleError } from "../../../../Utils";
 import { toast } from "react-toastify";
 
+const CLOUDINARY_URL = "https://api.cloudinary.com/v1_1/dpwugcpvq/image/upload";
+const CLOUDINARY_UPLOAD_PRESET = "trendMingle";
+
 const AddProduct = () => {
   const [productName, setProductName] = useState("");
   const [productDescription, setProductDescription] = useState("");
@@ -16,23 +19,53 @@ const AddProduct = () => {
   const [isBestseller, setIsBestseller] = useState(false);
   const dispatch = useDispatch();
   const jwtToken = localStorage.getItem("jwtToken");
+
   const handleSizeToggle = (size) => {
     setSizes((prev) =>
       prev.includes(size) ? prev.filter((s) => s !== size) : [...prev, size]
     );
   };
 
-  const handleImageUpload = (e) => {
+  const handleImageUpload = async (e) => {
     const files = Array.from(e.target.files);
-    const urls = files.map((file) => URL.createObjectURL(file));
-    setImageUrl((prev) => [...prev, ...urls].slice(0, 4));
+    try {
+      const urls = await Promise.all(
+        files.map(async (file) => {
+          const formData = new FormData();
+          formData.append("file", file);
+          formData.append("upload_preset", CLOUDINARY_UPLOAD_PRESET);
+          formData.append("cloud_name", "dpwugcpvq");
+          const response = await fetch(CLOUDINARY_URL, {
+            method: "POST",
+            body: formData,
+          });
+          const data = await response.json();
+          if (data.url) {
+            return data.url;
+          } else {
+            throw new Error("Image upload failed");
+          }
+        })
+      );
+
+      setImageUrl((prev) => [...prev, ...urls].slice(0, 4));
+      toast.success("Images uploaded successfully");
+    } catch (error) {
+      console.error("Error uploading images to Cloudinary:", error);
+      toast.error("Error uploading images");
+    }
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!imageUrl || imageUrl.length === 0) {
+      toast.error("Please upload at least one image.");
+      return;
+    }
+
     const productData = {
-      productName: productName,
-      productDescription: productDescription,
+      productName,
+      productDescription,
       price,
       imageUrl,
       category,
@@ -41,6 +74,7 @@ const AddProduct = () => {
       stock,
       isBestseller,
     };
+
     try {
       const url = "http://localhost:8080/products/add";
       const result = await fetch(url, {
@@ -51,21 +85,20 @@ const AddProduct = () => {
         },
         body: JSON.stringify(productData),
       });
-      console.log(`Bearer ${jwtToken}`);
+
       const response = await result.json();
-      const { success, message, error } = response;
-      if (success) {
-        toast.success("Product added successfully");
-        console.log("successfully added product");
-        dispatch(setCurrentProduct(response));
-      } else if (!success) {
-        handleError(message);
-      } else if (error) {
-        handleError(error);
+      if (response.success) {
+        toast.success(response.message || "Product added successfully");
+        dispatch(setCurrentProduct(response.savedProduct));
+      } else {
+        handleError(response.message || "Error adding product");
       }
     } catch (error) {
-      console.log(error);
+      console.error("Error adding product", error);
+      toast.error("Error adding product");
     }
+
+    // Reset form fields
     setProductDescription("");
     setProductName("");
     setCategory("");
@@ -76,7 +109,6 @@ const AddProduct = () => {
     setSizes([]);
     setIsBestseller(false);
   };
-
   return (
     <form
       onSubmit={handleSubmit}
