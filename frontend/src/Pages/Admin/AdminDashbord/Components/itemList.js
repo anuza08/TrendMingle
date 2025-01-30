@@ -28,32 +28,80 @@ const ItemList = () => {
 
     getAllItem();
   }, []);
+  const handleDelete = async (id) => {
+    try {
+      const url = `http://localhost:8080/products/${id}`;
+      const result = await fetch(url, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await result.json();
+      if (data.success) {
+        setProductData((prev) => prev.filter((product) => product._id !== id));
+        handleError("Product deleted succeddfully");
+      } else {
+        handleError(data.message || "Failed to delete product");
+      }
+    } catch (error) {
+      console.error("Error deleting product:", error);
+      handleError("Error deleting product");
+    }
+  };
 
   return (
     <div className="p-4">
-      <h1 className="text-2xl font-bold mb-4">Product List</h1>
+      <h1 className="text-2xl font-bold mb-4">Item List</h1>
       {productData.length > 0 ? (
-        <div className="flex overflow-x-auto gap-6">
-          {productData.map((product, index) => (
-            <div
-              key={index}
-              className="p-4 border rounded-md shadow-md flex flex-col items-start min-w-[300px]"
-            >
-              <h2 className="text-lg font-bold mb-2">{product.productName}</h2>
-              <img
-                src={product.imageUrl[0]}
-                alt={product.productName}
-                className="w-full h-48 object-cover rounded-md mb-2"
-              />
-              <p className="text-sm text-gray-600">
-                <strong>Size:</strong> {product.sizes.join(", ")}
-              </p>
-              <p className="text-sm text-gray-600">
-                <strong>Stock:</strong> {product.stock}
-              </p>
-            </div>
-          ))}
-        </div>
+        <table className="w-full border-collapse shadow-md">
+          <thead>
+            <tr className="bg-gray-100">
+              <th className="p-2">Image</th>
+              <th className=" p-2">Price</th>
+              <th className=" p-2">Stock</th>
+              <th className=" p-2">Sizes</th>
+              <th className=" p-2"></th>
+            </tr>
+          </thead>
+          <tbody>
+            {productData.map((product, index) => (
+              <tr key={index} className="text-center shadow-md">
+                <td className="p-2">
+                  <img
+                    src={product.imageUrl[0]}
+                    alt={product.productName}
+                    className="w-20 h-20 object-cover mx-auto rounded-md"
+                  />
+                </td>
+                <td className=" p-2">${product.price}</td>
+                <td className=" p-2">{product.stock}</td>
+                <td className=" p-2">{product.sizes.join(", ")}</td>
+                <td className="p-2">
+                  <button onClick={() => handleDelete(product._id)}>
+                    <svg
+                      xmlns="http://www.w3.org/2000/svg"
+                      viewBox="0 0 24 24"
+                      fill="none"
+                      stroke="currentColor"
+                      strokeWidth="2"
+                      strokeLinecap="round"
+                      strokeLinejoin="round"
+                      className="w-6 h-6 text-red-600 hover:text-red-800 transition duration-200"
+                    >
+                      <polyline points="3 6 5 6 21 6"></polyline>
+                      <path d="M19 6l-1 14a2 2 0 0 1-2 2H8a2 2 0 0 1-2-2L5 6"></path>
+                      <path d="M10 11v6"></path>
+                      <path d="M14 11v6"></path>
+                      <path d="M9 6V3h6v3"></path>
+                    </svg>
+                  </button>
+                </td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
       ) : (
         <p className="text-gray-500">No Products listed</p>
       )}

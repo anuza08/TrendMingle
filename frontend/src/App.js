@@ -11,10 +11,10 @@ import Collection from "./Pages/Collection";
 import AdminLogin from "./Pages/Admin/Auth/AdminLogin";
 import AdminSignUp from "./Pages/Admin/Auth/AdminSignUp";
 import AdminDashboard from "./Pages/Admin/AdminDashbord";
-import { useSelector } from "react-redux";
+// import { useSelector } from "react-redux";
 function App() {
-  const { role } = useSelector((state) => state.user);
-  console.log(role);
+  const role = localStorage.getItem("role");
+  // console.log(role);
   useEffect(() => {
     const link = document.createElement("link");
     link.rel = "stylesheet";

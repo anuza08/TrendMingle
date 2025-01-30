@@ -98,4 +98,37 @@ const getProductById = async (req, res) => {
   }
 };
 
-module.exports = { addProduct, getAllProduct, getProductById };
+const deleteProductById = async (req, res) => {
+  try {
+    const { id } = req.params;
+    const product = await ProductModel.findById(id);
+    if (!product) {
+      return res
+        .status(401)
+        .json({ success: false, message: "Product not found" });
+    }
+
+    if (product.imageUrl && product.imageUrl.length > 0) {
+      for (const imageUrl of product.imageUrl) {
+        const publicId = imageUrl.split("/").pop().split(".")[0];
+        await cloudinary.uploader.destroy(`product_images/${publicId}`);
+      }
+    }
+
+    await ProductModel.findByIdAndDelete(id);
+
+    res
+      .status(200)
+      .json({ success: true, message: "Product Deleted successfully" });
+  } catch (error) {
+    console.log("Error deleting product", error);
+    res.status(500).json({ message: error, success: false });
+  }
+};
+
+module.exports = {
+  addProduct,
+  getAllProduct,
+  getProductById,
+  deleteProductById,
+};
