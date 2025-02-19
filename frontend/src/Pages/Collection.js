@@ -48,21 +48,28 @@ const Collection = () => {
     };
 
     getAllItem();
-  }, [selectedCategory]);
+  }, [selectedCategory, location.search]);
+
+  const handleAddToCart = (product) => {
+    console.log("Add to cart", product);
+  };
 
   return (
     <div>
-      {filteredProducts.length > 0 ? (
-        <div className="flex space-x-4 overflow-x-auto p-10">
-          {filteredProducts.map((product) => (
-            <div className="w-[270px] h-[340px] flex-shrink-0 bg-slate-500 relative">
-              <div className="w-[270px] h-[250px] items-center relative">
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 p-10">
+        {filteredProducts.length > 0 ? (
+          filteredProducts.map((product) => (
+            <div
+              key={product.id}
+              className="w-full sm:w-full md:w-full lg:w-full"
+            >
+              <div className="w-full h-[250px] relative bg-[#F7F7F7] group">
                 <img
                   src={product.imageUrl}
                   alt={product.productName}
                   className="w-full h-full object-cover"
                 />
-                <div className="absolute top-2 right-2 bg-slate-300 text-white rounded-full p-2">
+                <div className="absolute top-2 right-2 bg-white text-white rounded-full p-2">
                   <svg
                     xmlns="http://www.w3.org/2000/svg"
                     viewBox="0 0 512 512"
@@ -76,15 +83,75 @@ const Collection = () => {
                     />
                   </svg>
                 </div>
+                <button
+                  className="absolute font-roboto bottom-0 left-0 w-full bg-black text-white py-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                  onClick={() => handleAddToCart(product)}
+                >
+                  Add to Cart
+                </button>
               </div>
-              <div>{product.productName}</div>
-              <div>$ {product.price}</div>
+              <div className="p-2">
+                <div className="font-roboto font-medium text-lg">
+                  <b>{product.productName}</b>
+                </div>
+                <div className="text-red-500 font-roboto">
+                  $ {product.price}
+                </div>
+
+                <div className="flex items-center">
+                  <svg
+                    className="w-4 h-4 text-yellow-300 ms-1"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 22 20"
+                  >
+                    <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                  </svg>
+                  <svg
+                    className="w-4 h-4 text-yellow-300 ms-1"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 22 20"
+                  >
+                    <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                  </svg>
+                  <svg
+                    className="w-4 h-4 text-yellow-300 ms-1"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 22 20"
+                  >
+                    <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                  </svg>
+                  <svg
+                    className="w-4 h-4 text-yellow-300 ms-1"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 22 20"
+                  >
+                    <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                  </svg>
+                  <svg
+                    className="w-4 h-4 ms-1 text-gray-300 dark:text-gray-500"
+                    aria-hidden="true"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="currentColor"
+                    viewBox="0 0 22 20"
+                  >
+                    <path d="M20.924 7.625a1.523 1.523 0 0 0-1.238-1.044l-5.051-.734-2.259-4.577a1.534 1.534 0 0 0-2.752 0L7.365 5.847l-5.051.734A1.535 1.535 0 0 0 1.463 9.2l3.656 3.563-.863 5.031a1.532 1.532 0 0 0 2.226 1.616L11 17.033l4.518 2.375a1.534 1.534 0 0 0 2.226-1.617l-.863-5.03L20.537 9.2a1.523 1.523 0 0 0 .387-1.575Z" />
+                  </svg>
+                </div>
+              </div>
             </div>
-          ))}
-        </div>
-      ) : (
-        <p>No products available in this category</p>
-      )}
+          ))
+        ) : (
+          <p>No products available in this category</p>
+        )}
+      </div>
     </div>
   );
 };

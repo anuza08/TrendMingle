@@ -5,6 +5,7 @@ import { useState } from "react";
 const Navbar = () => {
   const [loggedInUser, setLoggedInUser] = useState("");
   const [roleType, setRoleType] = useState(null);
+  const [openMenu, setOpenMenu] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -89,27 +90,27 @@ const Navbar = () => {
 
                 <Link
                   to="/home"
-                  class="rounded-md bg-[#EFB6C8] px-3 py-2 text-sm font-medium text-gray-700"
+                  class="rounded-md hover:bg-red-600 px-3 py-2 text-sm font-medium text-gray-700"
                 >
                   HOME
                 </Link>
 
                 <Link
                   to="/collection"
-                  class="rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-[#EFB6C8] hover:text-white"
+                  class="rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-red-600 hover:text-white"
                 >
                   COLLECTION
                 </Link>
 
                 <Link
                   to="/about"
-                  class="rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-[#EFB6C8] hover:text-white"
+                  class="rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-red-600 hover:text-white"
                 >
                   ABOUT
                 </Link>
                 <Link
                   to="/contact"
-                  class="rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-[#EFB6C8] hover:text-white"
+                  class="rounded-md px-3 py-2 text-sm font-medium text-gray-700 hover:bg-red-600 hover:text-white"
                 >
                   CONTACT
                 </Link>
@@ -119,7 +120,7 @@ const Navbar = () => {
           <div class="absolute inset-y-0 right-0 flex items-center pr-2 sm:static sm:inset-auto sm:ml-6 sm:pr-0">
             <button
               type="button"
-              class="relative rounded-full bg-[#EFB6C8] p-1 text-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
+              class="relative rounded-full hover:bg-red-600 p-1 text-gray-700 hover:text-white focus:outline-none focus:ring-2 focus:ring-white focus:ring-offset-2 focus:ring-offset-gray-800"
             >
               <span class="absolute -inset-1.5"></span>
               <span class="sr-only">View notifications</span>
@@ -149,6 +150,7 @@ const Navbar = () => {
                   id="user-menu-button"
                   aria-expanded="false"
                   aria-haspopup="true"
+                  onClick={() => setOpenMenu(!openMenu)}
                 >
                   <span class="absolute -inset-1.5"></span>
                   <span class="sr-only">Open user menu</span>
@@ -170,43 +172,45 @@ const Navbar = () => {
               From: "transform opacity-100 scale-100"
               To: "transform opacity-0 scale-95"
           --> */}
-              <div
-                class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-none"
-                role="menu"
-                aria-orientation="vertical"
-                aria-labelledby="user-menu-button"
-                tabindex="-1"
-              >
-                {/* <!-- Active: "bg-gray-100 outline-none", Not Active: "" --> */}
-                <a
-                  href="#"
-                  class="block px-4 py-2 text-sm text-gray-700"
-                  role="menuitem"
+              {openMenu && (
+                <div
+                  class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black/5 focus:outline-none"
+                  role="menu"
+                  aria-orientation="vertical"
+                  aria-labelledby="user-menu-button"
                   tabindex="-1"
-                  id="user-menu-item-0"
                 >
-                  Your Profile
-                </a>
-                <a
-                  href="#"
-                  class="block px-4 py-2 text-sm text-gray-700"
-                  role="menuitem"
-                  tabindex="-1"
-                  id="user-menu-item-1"
-                >
-                  Settings
-                </a>
-                <a
-                  href="#"
-                  class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 rounded-lg"
-                  role="menuitem"
-                  tabindex="-1"
-                  id="user-menu-item-2"
-                  onClick={handleLogout}
-                >
-                  Log out
-                </a>
-              </div>
+                  {/* <!-- Active: "bg-gray-100 outline-none", Not Active: "" --> */}
+                  <a
+                    href="#"
+                    class="block px-4 py-2 text-sm text-gray-700"
+                    role="menuitem"
+                    tabindex="-1"
+                    id="user-menu-item-0"
+                  >
+                    Your Profile
+                  </a>
+                  <a
+                    href="#"
+                    class="block px-4 py-2 text-sm text-gray-700"
+                    role="menuitem"
+                    tabindex="-1"
+                    id="user-menu-item-1"
+                  >
+                    Settings
+                  </a>
+                  <a
+                    href="#"
+                    class="block px-4 py-2 text-sm text-gray-700 hover:bg-gray-200 rounded-lg"
+                    role="menuitem"
+                    tabindex="-1"
+                    id="user-menu-item-2"
+                    onClick={handleLogout}
+                  >
+                    Log out
+                  </a>
+                </div>
+              )}
             </div>
           </div>
         </div>
@@ -215,7 +219,7 @@ const Navbar = () => {
       {/* <!-- Mobile menu, show/hide based on menu state. --> */}
       <div class="sm:hidden" id="mobile-menu">
         <div class="space-y-1 px-2 pb-3 pt-2">
-          {/* <!-- Current: "bg-gray-900 text-white", Default: "text-gray-500 hover:bg-[#EFB6C8] hover:text-white" --> */}
+          {/* <!-- Current: "bg-gray-900 text-white", Default: "text-gray-500 bg-red-600 hover:text-white" --> */}
           <a
             href="#"
             class="block rounded-md bg-gray-900 px-3 py-2 text-base font-medium text-white"
@@ -225,19 +229,19 @@ const Navbar = () => {
           </a>
           <a
             href="#"
-            class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-[#EFB6C8] hover:text-white"
+            class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-red-600 hover:text-white"
           >
             Collection
           </a>
           <a
             href="#"
-            class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-[#EFB6C8] hover:text-white"
+            class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-red-600 hover:text-white"
           >
             About
           </a>
           <a
             href="#"
-            class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-gray-700 hover:text-white"
+            class="block rounded-md px-3 py-2 text-base font-medium text-gray-300 hover:bg-red-600 hover:text-white"
           >
             Contact
           </a>

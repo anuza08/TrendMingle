@@ -24,13 +24,13 @@ const Sidebar = () => {
   return (
     <>
       <aside>
-        <ul className="mx-4 sm:mx-8 md:mx-12 lg:mx-16 xl:mx-24">
+        <ul className="mx-4 sm:mx-8 md:mx-12 lg:mx-16 xl:mx-24 pr-8 border-r">
           {categories.map((category) => (
             <li
               key={category}
               onClick={() => handleFilterChange(category)}
               style={{ cursor: "pointer" }}
-              className="mb-2 flex items-center justify-between cursor-pointer w-60 px-3 py-2 border-b"
+              className="mb-2 flex items-center justify-between cursor-pointer w-60 px-3 py-2"
             >
               {category}
               <svg
