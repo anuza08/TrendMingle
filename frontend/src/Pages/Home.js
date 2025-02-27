@@ -26,7 +26,7 @@ const Home = () => {
       </h2>
       <CategorySection />
       <hr className="border-t border-gray-300 mx-24 my-4" />
-      <CategoryBreaker name={"THIS MONTH"} />
+      <CategoryBreaker name={"BEST SELLERS"} />
       <h2 className="font-medium font-roboto px-10 top-32 ml-12 text-2xl">
         Best Selling Products
       </h2>
