@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 
-const BestSellerSection = () => {
-  const [bestSellers, setBestSellers] = useState([]);
+const NewlyAddedProducts = () => {
+  const [newProducts, setNewProducts] = useState([]);
 
   const handleAddToCart = (product) => {
     console.log("Add to cart", product);
@@ -10,34 +10,24 @@ const BestSellerSection = () => {
   useEffect(() => {
     const fetchData = async () => {
       try {
-        const response = await fetch("http://localhost:8080/products", {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-
-        if (!response.ok) {
-          throw new Error("Failed to fetch best sellers");
-        }
-
+        const response = await fetch("http://localhost:8080/products");
         const data = await response.json();
 
-        const bestSellerItems = data.products
-          .filter((product) => product.isBestseller)
+        const sortedProducts = data.products
+          .sort((a, b) => b._id.localeCompare(a._id))
           .slice(0, 4);
-        setBestSellers(bestSellerItems);
+
+        setNewProducts(sortedProducts);
       } catch (error) {
-        console.error("Error fetching best sellers:", error);
+        console.error("Error fetching products:", error);
       }
     };
 
     fetchData();
   }, []);
-
   return (
     <div className="flex mt-5 gap-6 mb-20 overflow-x-auto px-20">
-      {bestSellers.map((product) => (
+      {newProducts.map((product) => (
         <div key={product._id} className="w-full sm:w-full md:w-full lg:w-full">
           <div className="w-full h-[250px] relative bg-[#F7F7F7] group">
             <img
@@ -126,4 +116,4 @@ const BestSellerSection = () => {
   );
 };
 
-export default BestSellerSection;
+export default NewlyAddedProducts;
