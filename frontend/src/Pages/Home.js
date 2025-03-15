@@ -7,6 +7,7 @@ import BestSellerSection from "./Components/BestSellerSection";
 import HomePageButtom from "./Components/homePageButtom";
 import banner2 from "../Assests/images/banner2.jpg";
 import NewlyAddedProducts from "./Components/NewlyAddedProducts";
+import Footer from "./Components/Footer";
 
 const Home = () => {
   return (
@@ -55,6 +56,7 @@ const Home = () => {
         <HomePageButtom name="View all" navigateTo="/collection" />
       </div>
       <NewlyAddedProducts />
+      <Footer />
     </>
   );
 };
