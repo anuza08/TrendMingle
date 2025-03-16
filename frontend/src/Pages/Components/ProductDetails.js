@@ -92,7 +92,7 @@ const ProductDetails = () => {
           </button>
         </div>
 
-        {/* Delivery Info */}
+        
         <div className="border-t pt-4 space-y-2">
           <div className="flex items-center gap-2">
             <FaTruck />
