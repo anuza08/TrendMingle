@@ -10,7 +10,6 @@ const Footer = () => {
   return (
     <div className="bg-black text-white py-12">
       <div className="container mx-auto px-4 grid grid-cols-1 md:grid-cols-4 gap-8">
-        {/* About Us Section */}
         <div className="space-y-4">
           <h3 className="text-xl font-bold font-roboto">About Us</h3>
           <p className="text-white font-roboto font-light text-sm leading-6">
@@ -19,7 +18,6 @@ const Footer = () => {
           </p>
         </div>
 
-        {/* Support Section */}
         <div className="space-y-4">
           <h3 className="text-xl font-bold font-roboto">Support</h3>
           <p className="text-white font-roboto font-light text-sm">
@@ -33,7 +31,6 @@ const Footer = () => {
           </p>
         </div>
 
-        {/* Quick Links Section */}
         <div className="space-y-4">
           <h3 className="text-xl font-bold font-roboto">Quick Links</h3>
           <ul className="text-white font-roboto font-light space-y-2">
@@ -44,7 +41,6 @@ const Footer = () => {
           </ul>
         </div>
 
-        {/* Follow Us Section */}
         <div className="space-y-4">
           <h3 className="text-xl font-bold font-roboto">Follow Us</h3>
           <div className="flex gap-6 text-gray-400">
@@ -56,7 +52,6 @@ const Footer = () => {
         </div>
       </div>
 
-      {/* Copyright Section */}
       <div className="text-center text-gray-500 mt-12 border-t border-gray-700 pt-8">
         &copy; {new Date().getFullYear()} Your Company. All Rights Reserved.
       </div>

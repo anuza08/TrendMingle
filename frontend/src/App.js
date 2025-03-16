@@ -11,6 +11,8 @@ import Collection from "./Pages/Collection";
 import AdminLogin from "./Pages/Admin/Auth/AdminLogin";
 import AdminSignUp from "./Pages/Admin/Auth/AdminSignUp";
 import AdminDashboard from "./Pages/Admin/AdminDashbord";
+import ProductDetails from "./Pages/Components/ProductDetails";
+import Footer from "./Pages/Components/Footer";
 // import { useSelector } from "react-redux";
 function App() {
   const role = localStorage.getItem("role");
@@ -43,12 +45,15 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/collection" element={<Collection />} />
+          <Route path="/product/:id" element={<ProductDetails />} />
+
           <Route path="/admin/*">
             <Route path="login" element={<AdminLogin />} />
             <Route path="signup" element={<AdminSignUp />} />
             <Route path="dashboard" element={<AdminDashboard />} />
           </Route>
         </Routes>
+        <Footer />
       </div>
     </>
   );

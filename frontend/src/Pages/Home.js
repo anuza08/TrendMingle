@@ -56,7 +56,7 @@ const Home = () => {
         <HomePageButtom name="View all" navigateTo="/collection" />
       </div>
       <NewlyAddedProducts />
-      <Footer />
+      
     </>
   );
 };

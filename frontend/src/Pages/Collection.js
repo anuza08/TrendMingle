@@ -1,10 +1,10 @@
-import React, { useState, useEffect } from "react";
+import React, { useState, useEffect, use } from "react";
 import { useLocation } from "react-router-dom";
 import { handleError } from "../Utils";
-
+import { useNavigate } from "react-router-dom";
 const Collection = () => {
   const [filteredProducts, setFilteredProducts] = useState([]);
-
+  const Navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const selectedCategory = queryParams.get("category") || "All";
@@ -54,6 +54,12 @@ const Collection = () => {
     console.log("Add to cart", product);
   };
 
+  const handleProductClick = (product) => {
+    console.log("Product details:", product);
+
+    Navigate(`/product/${product._id}`, { state: { product } });
+  };
+
   return (
     <div>
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-2 lg:grid-cols-4 gap-4 p-10">
@@ -61,7 +67,8 @@ const Collection = () => {
           filteredProducts.map((product) => (
             <div
               key={product.id}
-              className="w-full sm:w-full md:w-full lg:w-full"
+              className="w-full cursor-pointer sm:w-full md:w-full lg:w-full"
+              onClick={() => handleProductClick(product)}
             >
               <div className="w-full h-[250px] relative bg-[#F7F7F7] group">
                 <img
@@ -84,8 +91,11 @@ const Collection = () => {
                   </svg>
                 </div>
                 <button
-                  className="absolute font-roboto bottom-0 left-0 w-full bg-black text-white py-2 opacity-0 group-hover:opacity-100 transition-opacity"
-                  onClick={() => handleAddToCart(product)}
+                  className="absolute font-roboto cursor-pointer bottom-0 left-0 w-full bg-black text-white py-2 opacity-0 group-hover:opacity-100 transition-opacity"
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    handleAddToCart(product);
+                  }}
                 >
                   Add to Cart
                 </button>
