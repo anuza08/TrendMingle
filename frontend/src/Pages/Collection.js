@@ -2,6 +2,7 @@ import React, { useState, useEffect, use } from "react";
 import { useLocation } from "react-router-dom";
 import { handleError } from "../Utils";
 import { useNavigate } from "react-router-dom";
+import toast from "react-hot-toast";
 const Collection = () => {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const Navigate = useNavigate();
@@ -52,6 +53,7 @@ const Collection = () => {
 
   const handleAddToCart = (product) => {
     console.log("Add to cart", product);
+    toast.success("Item added successfully!");
   };
 
   const handleProductClick = (product) => {

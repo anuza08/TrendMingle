@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from "react";
 import { handleError } from "../../../../Utils";
+import { toast } from "react-toastify";
 
 const ItemList = () => {
   const [productData, setProductData] = useState([]);
@@ -41,13 +42,13 @@ const ItemList = () => {
       const data = await result.json();
       if (data.success) {
         setProductData((prev) => prev.filter((product) => product._id !== id));
-        handleError("Product deleted succeddfully");
+        toast.success(data.message || "Product deleted successfully");
       } else {
         handleError(data.message || "Failed to delete product");
       }
     } catch (error) {
       console.error("Error deleting product:", error);
-      handleError("Error deleting product");
+     toast.error("Error deleting product");
     }
   };
 

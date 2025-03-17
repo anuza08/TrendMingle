@@ -88,8 +88,8 @@ const AddProduct = () => {
 
       const response = await result.json();
       if (response.success) {
-        toast.success(response.message || "Product added successfully");
         dispatch(setCurrentProduct(response.savedProduct));
+        toast.success(response.message || "Product added successfully");
       } else {
         handleError(response.message || "Error adding product");
       }

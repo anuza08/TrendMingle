@@ -1,6 +1,6 @@
 import "./App.css";
 import { Navigate, Route, Routes } from "react-router-dom";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 import Login from "./Pages/Login";
 import Signup from "./Pages/Signup";
 import Home from "./Pages/Home";
@@ -13,6 +13,7 @@ import AdminSignUp from "./Pages/Admin/Auth/AdminSignUp";
 import AdminDashboard from "./Pages/Admin/AdminDashbord";
 import ProductDetails from "./Pages/Components/ProductDetails";
 import Footer from "./Pages/Components/Footer";
+import { Toaster } from "react-hot-toast";
 // import { useSelector } from "react-redux";
 function App() {
   const role = localStorage.getItem("role");
@@ -28,6 +29,7 @@ function App() {
   return (
     <>
       <div>
+        <Toaster position="top-center" />
         {role === "user" && <Navbar />}
         <Routes>
           {role === "user" && (
