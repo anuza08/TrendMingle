@@ -1,18 +1,59 @@
 import { useLocation } from "react-router-dom";
 import React, { useState } from "react";
 import { FaTruck, FaRedo } from "react-icons/fa";
+import { useDispatch } from "react-redux";
+import { setCart } from "../../redux/slices/cartSlice";
+import toast, { Toaster } from "react-hot-toast";
 
 const ProductDetails = () => {
   const location = useLocation();
   const data = location.state?.product;
   const [product, setProduct] = useState(data);
   const [selectedImage, setSelectedImage] = useState(product.images);
-  const [quantity, setQuantity] = useState(0);
+  const [quantity, setQuantity] = useState(1);
   const [selectedSize, setSelectedSize] = useState("M");
+  const storedUser = localStorage.getItem("id");
+  const dispatch = useDispatch();
+  console.log("userId", storedUser);
+  const handleAddToCart = () => {
+    console.log("Adding to cart");
+    if (!storedUser) {
+      alert("Please login to add product to cart");
+      return;
+    }
+
+    const cartData = {
+      userId: storedUser,
+      productId: product._id,
+      quantity,
+    };
+
+    fetch("http://localhost:8080/cart/add", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(cartData),
+    })
+      .then((res) => res.json())
+      .then((data) => {
+        if (data.status === 201) {
+          console.log("Cart data:", data.cart);
+          dispatch(setCart(data.cart));
+          toast.success(data.message || "Product added to cart successfully");
+        } else {
+          toast.error(data.message || "Failed to add product to cart");
+        }
+      })
+      .catch((error) => {
+        console.error("Error adding product to cart:", error);
+        toast.error(data.message || "Failed to add product to cart");
+      });
+  };
 
   return (
     <div className="flex flex-col lg:flex-row gap-6 p-6 lg:p-10">
-      {/* Thumbnail Section */}
+      <Toaster position="top-center" />
       <div className="flex lg:flex-col gap-2">
         <img
           src={product.imageUrl}
@@ -24,7 +65,6 @@ const ProductDetails = () => {
         />
       </div>
 
-      {/* Main Product Image */}
       <div className="flex-1">
         <img
           src={product.imageUrl}
@@ -33,7 +73,6 @@ const ProductDetails = () => {
         />
       </div>
 
-      {/* Product Details */}
       <div className="flex-1 space-y-4">
         <h1 className="text-2xl lg:text-3xl font-roboto font-semibold">
           {product.productName}
@@ -66,7 +105,6 @@ const ProductDetails = () => {
           </div>
         </div>
 
-        {/* Quantity & Buttons */}
         <div className="flex flex-wrap items-center gap-4">
           <div className="flex items-center border rounded-md">
             <button
@@ -87,12 +125,17 @@ const ProductDetails = () => {
           <button className="bg-red-500 text-white px-6 py-2 rounded-md w-full sm:w-auto">
             Buy Now
           </button>
+          <button
+            onClick={handleAddToCart}
+            className="bg-black text-white px-6 py-2 rounded-md w-full sm:w-auto"
+          >
+            Add to Cart
+          </button>
           <button className="border px-3 py-2 rounded-md w-full sm:w-auto">
             ♡
           </button>
         </div>
 
-        
         <div className="border-t pt-4 space-y-2">
           <div className="flex items-center gap-2">
             <FaTruck />

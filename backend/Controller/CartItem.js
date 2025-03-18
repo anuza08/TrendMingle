@@ -47,11 +47,15 @@ const addToCart = async (req, res) => {
       });
     }
 
-    res.status(201).json(cart);
+    res.status(201).json({ status: 201, cart });
   } catch (error) {
     res
       .status(500)
-      .json({ message: "Error adding item to cart", error: error.message });
+      .json({
+        status: 500,
+        message: "Error adding item to cart",
+        error: error.message,
+      });
   }
 };
 
@@ -63,7 +67,7 @@ const getCartItems = async (req, res) => {
     const cart = await CartItem.findOne({ userId });
     if (!cart) return res.status(404).json({ message: "Cart not found" });
 
-    res.status(200).json(cart);
+    res.status(200).json({ cart });
   } catch (error) {
     res
       .status(500)

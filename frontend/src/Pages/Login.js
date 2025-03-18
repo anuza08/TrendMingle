@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { ToastContainer } from "react-toastify";
+import { toast, ToastContainer } from "react-toastify";
 import { useNavigate, Link } from "react-router-dom";
 import { handleError, handleSuccess } from "../Utils";
 import { useDispatch } from "react-redux";
@@ -37,15 +37,12 @@ const Login = () => {
       const { success, messsage, error, role } = response;
 
       if (success) {
-        dispatch(
-          setCurrentUser({
-            userData: response,
-            role: role,
-          })
-        );
+        dispatch(setCurrentUser(response));
+        toast.success(messsage);
         localStorage.setItem("loggedInUser", response.name);
         localStorage.setItem("jwtToken", response.jwtToken);
         localStorage.setItem("role", response.role);
+        localStorage.setItem("id", response.id);
         handleSuccess(messsage);
         setTimeout(() => {
           Navigate("/home");

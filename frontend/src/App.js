@@ -14,10 +14,10 @@ import AdminDashboard from "./Pages/Admin/AdminDashbord";
 import ProductDetails from "./Pages/Components/ProductDetails";
 import Footer from "./Pages/Components/Footer";
 import { Toaster } from "react-hot-toast";
-// import { useSelector } from "react-redux";
+
 function App() {
   const role = localStorage.getItem("role");
-  // console.log(role);
+ 
   useEffect(() => {
     const link = document.createElement("link");
     link.rel = "stylesheet";
