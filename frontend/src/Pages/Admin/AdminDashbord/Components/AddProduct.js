@@ -1,6 +1,5 @@
 import React, { useState } from "react";
 import { useDispatch } from "react-redux";
-import { setCurrentProduct } from "../../../../redux/slices/productSlice";
 import { handleError } from "../../../../Utils";
 import { toast } from "react-toastify";
 
@@ -88,7 +87,7 @@ const AddProduct = () => {
 
       const response = await result.json();
       if (response.success) {
-        dispatch(setCurrentProduct(response.savedProduct));
+        // dispatch(setCurrentProduct(response.savedProduct));
         toast.success(response.message || "Product added successfully");
       } else {
         handleError(response.message || "Error adding product");

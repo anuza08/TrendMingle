@@ -1,34 +1,19 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect } from "react";
 import { handleError } from "../../../../Utils";
 import { toast } from "react-toastify";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProducts } from "../../../../redux/slices/productSlice";
 
 const ItemList = () => {
-  const [productData, setProductData] = useState([]);
+  const { products = [], status } = useSelector((state) => state.product);
+  const dispatch = useDispatch();
 
   useEffect(() => {
-    const getAllItem = async () => {
-      const url = "http://localhost:8080/products";
-      try {
-        const result = await fetch(url, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        const data = await result.json();
-        if (data.success) {
-          setProductData(data.products);
-        } else {
-          console.log("Failed to fetch products");
-        }
-      } catch (error) {
-        console.error("Error fetching products:", error);
-        handleError(error);
-      }
-    };
+    if (status === "idel") {
+      dispatch(fetchProducts());
+    }
+  }, [status, dispatch]);
 
-    getAllItem();
-  }, []);
   const handleDelete = async (id) => {
     try {
       const url = `http://localhost:8080/products/${id}`;
@@ -41,33 +26,33 @@ const ItemList = () => {
 
       const data = await result.json();
       if (data.success) {
-        setProductData((prev) => prev.filter((product) => product._id !== id));
+        dispatch(fetchProducts());
         toast.success(data.message || "Product deleted successfully");
       } else {
         handleError(data.message || "Failed to delete product");
       }
     } catch (error) {
       console.error("Error deleting product:", error);
-     toast.error("Error deleting product");
+      toast.error("Error deleting product");
     }
   };
 
   return (
     <div className="p-4">
       <h1 className="text-2xl font-bold mb-4">Item List</h1>
-      {productData.length > 0 ? (
+      {products.length > 0 ? (
         <table className="w-full border-collapse shadow-md">
           <thead>
             <tr className="bg-gray-100">
               <th className="p-2">Image</th>
-              <th className=" p-2">Price</th>
-              <th className=" p-2">Stock</th>
-              <th className=" p-2">Sizes</th>
-              <th className=" p-2"></th>
+              <th className="p-2">Price</th>
+              <th className="p-2">Stock</th>
+              <th className="p-2">Sizes</th>
+              <th className="p-2"></th>
             </tr>
           </thead>
           <tbody>
-            {productData.map((product, index) => (
+            {products.map((product, index) => (
               <tr key={index} className="text-center shadow-md">
                 <td className="p-2">
                   <img
@@ -76,9 +61,9 @@ const ItemList = () => {
                     className="w-20 h-20 object-cover mx-auto rounded-md"
                   />
                 </td>
-                <td className=" p-2">${product.price}</td>
-                <td className=" p-2">{product.stock}</td>
-                <td className=" p-2">{product.sizes.join(", ")}</td>
+                <td className="p-2">${product.price}</td>
+                <td className="p-2">{product.stock}</td>
+                <td className="p-2">{product.sizes.join(", ")}</td>
                 <td className="p-2">
                   <button onClick={() => handleDelete(product._id)}>
                     <svg

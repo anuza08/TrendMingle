@@ -14,10 +14,11 @@ import AdminDashboard from "./Pages/Admin/AdminDashbord";
 import ProductDetails from "./Pages/Components/ProductDetails";
 import Footer from "./Pages/Components/Footer";
 import { Toaster } from "react-hot-toast";
+import CartItems from "./Pages/Cart/CartItems";
 
 function App() {
   const role = localStorage.getItem("role");
- 
+
   useEffect(() => {
     const link = document.createElement("link");
     link.rel = "stylesheet";
@@ -47,6 +48,7 @@ function App() {
           <Route path="/about" element={<About />} />
           <Route path="/contact" element={<Contact />} />
           <Route path="/collection" element={<Collection />} />
+          <Route path="/cart" element={<CartItems />} />
           <Route path="/product/:id" element={<ProductDetails />} />
 
           <Route path="/admin/*">

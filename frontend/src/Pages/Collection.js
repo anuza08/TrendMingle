@@ -3,53 +3,31 @@ import { useLocation } from "react-router-dom";
 import { handleError } from "../Utils";
 import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProducts } from "../redux/slices/productSlice";
 const Collection = () => {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const Navigate = useNavigate();
   const location = useLocation();
   const queryParams = new URLSearchParams(location.search);
   const selectedCategory = queryParams.get("category") || "All";
-
+  const { products = [], status } = useSelector((state) => state.product);
+  console.log(products);
+  const dispatch = useDispatch();
   useEffect(() => {
-    const getAllItem = async () => {
-      const url = "http://localhost:8080/products";
-      try {
-        const result = await fetch(url, {
-          method: "GET",
-          headers: {
-            "Content-Type": "application/json",
-          },
-        });
-        const data = await result.json();
-        if (data.success) {
-          let filteredData = data.products;
-          if (selectedCategory !== "All") {
-            const categoryMap = {
-              "Women's Clothing": "women",
-              "Men's Clothing": "men",
-              Kids: "kids",
-              Bottomwear: "bottomwear",
-              Footwear: "footwear",
-              Topwear: "topwear",
-            };
+    if (status === "idel") {
+      dispatch(fetchProducts());
+    }
 
-            filteredData = data.products.filter(
-              (product) => product.category === categoryMap[selectedCategory]
-            );
-          }
-
-          setFilteredProducts(filteredData);
-        } else {
-          console.log("Failed to fetch products");
-        }
-      } catch (error) {
-        console.error("Error fetching products:", error);
-        handleError(error);
-      }
-    };
-
-    getAllItem();
-  }, [selectedCategory, location.search]);
+    if (selectedCategory === "All") {
+      setFilteredProducts(products);
+    } else {
+      const filtered = products.filter(
+        (product) => product.category === selectedCategory
+      );
+      setFilteredProducts(filtered);
+    }
+  }, [status, selectedCategory, products]);
 
   const handleAddToCart = (product) => {
     console.log("Add to cart", product);
