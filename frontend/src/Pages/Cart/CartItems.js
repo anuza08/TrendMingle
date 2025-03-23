@@ -9,12 +9,31 @@ const CartItems = () => {
   const { items, totalPrice, status } = useSelector((state) => state.cart);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-  useSelector((state) => console.log(state.cart));
-  const handleRemove = (item) => {
-    dispatch(removeFromCart({ _id: item._id }));
-    toast.success("Item removed from cart");
-  };
 
+  useSelector((state) => console.log(state.cart));
+  const handleRemove = (product) => {
+    console.log("Removing item from cart:", product);
+    const userId = localStorage.getItem("id");
+    if (!userId) {
+      toast.error("Please login to remove items from the cart");
+      return;
+    }
+
+    console.log("Dispatching removeFromCart with payload:", {
+      userId,
+      productId: product.productId,
+    });
+
+    dispatch(removeFromCart({ userId, productId: product.productId }))
+      .unwrap()
+      .then(() => {
+        toast.success("Item removed from cart");
+      })
+      .catch((error) => {
+        toast.error("Failed to remove item from cart");
+        console.error("Error removing item from cart:", error);
+      });
+  };
   useEffect(() => {
     if (status === "idle") {
       dispatch(fetchCartItems());

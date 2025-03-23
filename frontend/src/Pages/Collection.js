@@ -5,6 +5,7 @@ import { useNavigate } from "react-router-dom";
 import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../redux/slices/productSlice";
+import { addToCart } from "../redux/slices/cartSlice";
 const Collection = () => {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const Navigate = useNavigate();
@@ -12,7 +13,7 @@ const Collection = () => {
   const queryParams = new URLSearchParams(location.search);
   const selectedCategory = queryParams.get("category") || "All";
   const { products = [], status } = useSelector((state) => state.product);
-  console.log(products);
+  const storedUser = localStorage.getItem("id");
   const dispatch = useDispatch();
   useEffect(() => {
     if (status === "idel") {
@@ -30,8 +31,26 @@ const Collection = () => {
   }, [status, selectedCategory, products]);
 
   const handleAddToCart = (product) => {
-    console.log("Add to cart", product);
-    toast.success("Item added successfully!");
+    if (!storedUser) {
+      alert("Please login to add product to cart");
+      return;
+    }
+
+    const cartData = {
+      userId: storedUser,
+      productId: product._id,
+      quantity: 1,
+    };
+
+    dispatch(addToCart(cartData))
+      .unwrap()
+      .then(() => {
+        toast.success("Product added to cart successfully");
+      })
+      .catch((error) => {
+        toast.error("Failed to add product to cart");
+        console.error("Error adding product to cart:", error);
+      });
   };
 
   const handleProductClick = (product) => {
@@ -46,7 +65,7 @@ const Collection = () => {
         {filteredProducts.length > 0 ? (
           filteredProducts.map((product) => (
             <div
-              key={product.id}
+              key={product._id}
               className="w-full cursor-pointer sm:w-full md:w-full lg:w-full"
               onClick={() => handleProductClick(product)}
             >

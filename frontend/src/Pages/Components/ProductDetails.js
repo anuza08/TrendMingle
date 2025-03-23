@@ -16,40 +16,62 @@ const ProductDetails = () => {
   const dispatch = useDispatch();
   useSelector((state) => console.log(state.cart));
   console.log("userId", storedUser);
+  // const handleAddToCart = () => {
+  //   console.log("Adding to cart");
+  //   if (!storedUser) {
+  //     alert("Please login to add product to cart");
+  //     return;
+  //   }
+  //   const cartData = {
+  //     userId: storedUser,
+  //     productId: product._id,
+  //     quantity,
+  //   };
+  //   fetch("http://localhost:8080/cart/add", {
+  //     method: "POST",
+  //     headers: {
+  //       "Content-Type": "application/json",
+  //     },
+  //     body: JSON.stringify(cartData),
+  //   })
+  //     .then((res) => res.json())
+  //     .then((data) => {
+  //       if (data.status === 201) {
+  //         console.log("Cart data:", data.cart);
+  //         // dispatch(setCart(data.cart));
+  //         toast.success(data.message || "Product added to cart successfully");
+  //       } else {
+  //         toast.error(data.message || "Failed to add product to cart");
+  //       }
+  //     })
+  //     .catch((error) => {
+  //       console.error("Error adding product to cart:", error);
+  //       toast.error(data.message || "Failed to add product to cart");
+  //     });
+  // };
+
   const handleAddToCart = () => {
-    console.log("Adding to cart");
     if (!storedUser) {
       alert("Please login to add product to cart");
       return;
     }
+
     const cartData = {
       userId: storedUser,
       productId: product._id,
-      quantity,
+      quantity: quantity,
     };
-    fetch("http://localhost:8080/cart/add", {
-      method: "POST",
-      headers: {
-        "Content-Type": "application/json",
-      },
-      body: JSON.stringify(cartData),
-    })
-      .then((res) => res.json())
-      .then((data) => {
-        if (data.status === 201) {
-          console.log("Cart data:", data.cart);
-          // dispatch(setCart(data.cart));
-          toast.success(data.message || "Product added to cart successfully");
-        } else {
-          toast.error(data.message || "Failed to add product to cart");
-        }
+
+    dispatch(addToCart(cartData))
+      .unwrap()
+      .then(() => {
+        toast.success("Product added to cart successfully");
       })
       .catch((error) => {
+        toast.error("Failed to add product to cart");
         console.error("Error adding product to cart:", error);
-        toast.error(data.message || "Failed to add product to cart");
       });
   };
-
   return (
     <div className="flex flex-col lg:flex-row gap-6 p-6 lg:p-10">
       <Toaster position="top-center" />
@@ -125,7 +147,7 @@ const ProductDetails = () => {
             Buy Now
           </button>
           <button
-            onClick={() => dispatch(addToCart(product))}
+            onClick={handleAddToCart}
             className="bg-black text-white px-6 py-2 rounded-md w-full sm:w-auto"
           >
             Add to Cart

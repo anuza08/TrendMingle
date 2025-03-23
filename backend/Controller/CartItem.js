@@ -129,7 +129,7 @@ const deleteCart = async (req, res) => {
   }
 };
 
-// Delete single cart item
+
 const deleteCartItem = async (req, res) => {
   const { userId, productId } = req.body;
 
