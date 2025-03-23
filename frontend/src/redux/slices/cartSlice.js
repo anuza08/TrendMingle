@@ -1,76 +1,86 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
+
+const getAllItems = async () => {
+  const userId = localStorage.getItem("id");
+  const url = `http://localhost:8080/cart/${userId}`;
+  try {
+    const result = await fetch(url, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    if (!result.ok) {
+      throw new Error("Failed to fetch products");
+    }
+    return await result.json();
+  } catch (error) {
+    console.error("Error fetching products:", error);
+    throw error;
+  }
+};
+
+export const fetchCartItems = createAsyncThunk(
+  "cart/fetchCartItems",
+  async () => {
+    const data = await getAllItems();
+    const mappedProducts = data.cart.products.map((product) => ({
+      ...product,
+      // imageUrl: "https://via.placeholder.com/150", // Placeholder until actual images are added
+    }));
+    console.log("cart data", mappedProducts);
+    return mappedProducts;
+  }
+);
 
 const initialState = {
-  cartId: null,
-  userId: null,
-  cartItems: [],
+  items: [],
+  tempItems: [],
+  status: "idle",
   totalPrice: 0,
-  createdAt: null,
-  updatedAt: null,
 };
 
 const cartSlice = createSlice({
   name: "cart",
   initialState,
   reducers: {
-    setCart(state, action) {
-      const { _id, userId, products, totalPrice, createdAt, updatedAt } =
-        action.payload;
-
-      state.cartId = _id;
-      state.userId = userId;
-      state.cartItems = products;
-      state.totalPrice = totalPrice;
-      state.createdAt = createdAt;
-      state.updatedAt = updatedAt;
-    },
-
-    addItem(state, action) {
-      const newItem = action.payload;
-      const existingItem = state.cartItems.find(
-        (item) => item.productId === newItem.productId
+    addToCart(state, action) {
+      const exsistingItem = state.items.find(
+        (item) => item._id === action.payload._id
       );
-
-      if (existingItem) {
-        existingItem.quantity += newItem.quantity;
-        existingItem.price += newItem.price * newItem.quantity;
+      if (exsistingItem) {
+        exsistingItem.quantity += 1;
+        exsistingItem.totalPrice += exsistingItem.price;
+        state.totalPrice += exsistingItem.price;
       } else {
-        state.cartItems.push({
-          productId: newItem.productId,
-          productName: newItem.productName,
-          quantity: newItem.quantity,
-          price: newItem.price,
-        });
+        state.items.push({ ...action.payload, quantity: 1 });
       }
-
-      state.totalPrice += newItem.price * newItem.quantity;
-    },
-
-    removeItem(state, action) {
-      const itemId = action.payload;
-      const existingItem = state.cartItems.find(
-        (item) => item.productId === itemId
+      state.tempItems = state.items;
+      state.status = "succeeded";
+      state.totalPrice = state.items.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
       );
-
-      if (existingItem) {
-        state.totalPrice -= existingItem.price * existingItem.quantity;
-        state.cartItems = state.cartItems.filter(
-          (item) => item.productId !== itemId
-        );
-      }
     },
-
-    clearCart(state) {
-      state.cartId = null;
-      state.userId = null;
-      state.cartItems = [];
-      state.totalPrice = 0;
-      state.createdAt = null;
-      state.updatedAt = null;
+    removeFromCart(state, action) {
+      state.items = state.items.filter(
+        (item) => item._id !== action.payload._id
+      );
+      state.tempItems = [...state.items];
+      state.status = "succeeded";
     },
   },
+  extraReducers: (builder) => {
+    builder.addCase(fetchCartItems.fulfilled, (state, action) => {
+      state.items = action.payload;
+      state.tempItems = action.payload;
+      state.status = "succeeded";
+      state.totalPrice = action.payload.reduce(
+        (sum, item) => sum + item.price * item.quantity,
+        0
+      );
+    });
+  },
 });
-
-export const { setCart, addItem, removeItem, clearCart } = cartSlice.actions;
-
+export const { addToCart, removeFromCart } = cartSlice.actions;
 export default cartSlice.reducer;

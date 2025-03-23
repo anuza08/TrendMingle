@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import { toast, ToastContainer } from "react-toastify";
+import { toast, Toaster } from "react-hot-toast";
 import { useNavigate, Link } from "react-router-dom";
 import { handleError, handleSuccess } from "../Utils";
 import { useDispatch } from "react-redux";
@@ -105,7 +105,7 @@ const Login = () => {
             Don't have an account?
             <Link to="/signup"> SignUp</Link>
           </span>
-          <ToastContainer />
+          <Toaster />
         </form>
       </div>
     </>

@@ -1,8 +1,8 @@
 import { useLocation } from "react-router-dom";
 import React, { useState } from "react";
 import { FaTruck, FaRedo } from "react-icons/fa";
-import { useDispatch } from "react-redux";
-import { setCart } from "../../redux/slices/cartSlice";
+import { useDispatch, useSelector } from "react-redux";
+import { addToCart } from "../../redux/slices/cartSlice";
 import toast, { Toaster } from "react-hot-toast";
 
 const ProductDetails = () => {
@@ -14,6 +14,7 @@ const ProductDetails = () => {
   const [selectedSize, setSelectedSize] = useState("M");
   const storedUser = localStorage.getItem("id");
   const dispatch = useDispatch();
+  useSelector((state) => console.log(state.cart));
   console.log("userId", storedUser);
   const handleAddToCart = () => {
     console.log("Adding to cart");
@@ -21,13 +22,11 @@ const ProductDetails = () => {
       alert("Please login to add product to cart");
       return;
     }
-
     const cartData = {
       userId: storedUser,
       productId: product._id,
       quantity,
     };
-
     fetch("http://localhost:8080/cart/add", {
       method: "POST",
       headers: {
@@ -39,7 +38,7 @@ const ProductDetails = () => {
       .then((data) => {
         if (data.status === 201) {
           console.log("Cart data:", data.cart);
-          dispatch(setCart(data.cart));
+          // dispatch(setCart(data.cart));
           toast.success(data.message || "Product added to cart successfully");
         } else {
           toast.error(data.message || "Failed to add product to cart");
@@ -126,7 +125,7 @@ const ProductDetails = () => {
             Buy Now
           </button>
           <button
-            onClick={handleAddToCart}
+            onClick={() => dispatch(addToCart(product))}
             className="bg-black text-white px-6 py-2 rounded-md w-full sm:w-auto"
           >
             Add to Cart

@@ -13,12 +13,6 @@ const Navbar = () => {
 
   const cartItems = useSelector((state) => state.cart.cartItems);
 
-  const cartItemCount = cartItems.reduce(
-  
-  
-    (total, item) => total + item.quantity,
-    0
-  );
   useEffect(() => {
     setLoggedInUser(localStorage.getItem("loggedInUser"));
     setRoleType(localStorage.getItem("role"));
@@ -129,11 +123,11 @@ const Navbar = () => {
                 <span className="sr-only">View cart</span>
                 <FaShoppingCart className="h-6 w-6" />
               </button>
-              {cartItemCount > 0 && (
+              {/* {cartItemCount > 0 && (
                 <span className="absolute top-0 right-0 inline-flex items-center justify-center px-2 py-1 text-xs font-bold leading-none text-white bg-red-600 rounded-full">
                   {cartItemCount}
                 </span>
-              )}
+              )} */}
             </div>
 
             <button

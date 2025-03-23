@@ -8,6 +8,9 @@ const addToCart = async (req, res) => {
     const product = await ProductModel.findById(productId);
     if (!product) return res.status(404).json({ message: "Product not found" });
 
+   
+    console.log("Product Details:", product);
+
     let cart = await CartItem.findOne({ userId });
 
     if (cart) {
@@ -18,9 +21,11 @@ const addToCart = async (req, res) => {
       if (existingProductIndex !== -1) {
         cart.products[existingProductIndex].quantity += quantity;
       } else {
+        // Add only the first image (index 0) from the imageUrl array
         cart.products.push({
           productId,
           productName: product.productName,
+          imageUrl: product.imageUrl[0], // Use only the first image URL
           quantity,
           price: product.price,
         });
@@ -33,12 +38,14 @@ const addToCart = async (req, res) => {
 
       await cart.save();
     } else {
+      // Add only the first image (index 0) from the imageUrl array
       cart = await CartItem.create({
         userId,
         products: [
           {
             productId,
             productName: product.productName,
+            imageUrl: product.imageUrl[0], // Use only the first image URL
             quantity,
             price: product.price,
           },
@@ -47,18 +54,18 @@ const addToCart = async (req, res) => {
       });
     }
 
+    // Debugging: Log the cart details
+    console.log("Cart Details:", cart);
+
     res.status(201).json({ status: 201, cart });
   } catch (error) {
-    res
-      .status(500)
-      .json({
-        status: 500,
-        message: "Error adding item to cart",
-        error: error.message,
-      });
+    res.status(500).json({
+      status: 500,
+      message: "Error adding item to cart",
+      error: error.message,
+    });
   }
 };
-
 // Get cart items
 const getCartItems = async (req, res) => {
   const { userId } = req.params;

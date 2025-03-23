@@ -1,30 +1,26 @@
 import React, { useEffect, useState } from "react";
+import { useDispatch, useSelector } from "react-redux";
+import { fetchProducts } from "../../redux/slices/productSlice";
 
 const NewlyAddedProducts = () => {
   const [newProducts, setNewProducts] = useState([]);
+  const { products, status } = useSelector((state) => state.product);
+  const dispatch = useDispatch();
 
   const handleAddToCart = (product) => {
     console.log("Add to cart", product);
   };
 
   useEffect(() => {
-    const fetchData = async () => {
-      try {
-        const response = await fetch("http://localhost:8080/products");
-        const data = await response.json();
+    if (status === "idel") {
+      dispatch(fetchProducts());
+    }
+    const sortedProducts = [...products]
+      .sort((a, b) => b._id.localeCompare(a._id))
+      .slice(0, 4);
 
-        const sortedProducts = data.products
-          .sort((a, b) => b._id.localeCompare(a._id))
-          .slice(0, 4);
-
-        setNewProducts(sortedProducts);
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
-    };
-
-    fetchData();
-  }, []);
+    setNewProducts(sortedProducts);
+  }, [status, products]);
   return (
     <div className="flex mt-5 gap-6 mb-20 overflow-x-auto px-20">
       {newProducts.map((product) => (
