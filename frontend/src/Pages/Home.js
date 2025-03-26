@@ -8,6 +8,7 @@ import HomePageButtom from "./Components/homePageButtom";
 import banner2 from "../Assests/images/banner2.jpg";
 import NewlyAddedProducts from "./Components/NewlyAddedProducts";
 import Footer from "./Components/Footer";
+import Chatbot from "./Chatbot";
 
 const Home = () => {
   return (
@@ -38,6 +39,7 @@ const Home = () => {
         <h2 className="font-medium font-roboto text-2xl ml-12">
           Best Selling Products
         </h2>
+        <Chatbot />
         <HomePageButtom
           name="View all"
           navigateTo="/collection?isBestseller=true"
@@ -56,7 +58,6 @@ const Home = () => {
         <HomePageButtom name="View all" navigateTo="/collection" />
       </div>
       <NewlyAddedProducts />
-      
     </>
   );
 };

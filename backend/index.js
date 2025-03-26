@@ -6,6 +6,7 @@ require("dotenv").config();
 const bodyParser = require("body-parser");
 const PORT = process.env.PORT || 8080;
 const AuthRo = require("./Routes/Authrouter");
+const chatRoutes = require("./Routes/chatRoutes");
 const ProductRouter = require("./Routes/ProductRouter");
 const CartRouter = require("./Routes/CartRouter");
 const adminRouter = require("./Routes/adminRouter");
@@ -24,5 +25,6 @@ app.use("/auth", AuthRo);
 app.use("/products", ProductRouter);
 app.use("/admin", adminRouter);
 app.use("/cart", CartRouter);
+app.use("/api/chat", chatRoutes);
 
 app.listen(PORT, () => console.log(`server is running on ${PORT}`));

@@ -8,7 +8,6 @@ const addToCart = async (req, res) => {
     const product = await ProductModel.findById(productId);
     if (!product) return res.status(404).json({ message: "Product not found" });
 
-   
     console.log("Product Details:", product);
 
     let cart = await CartItem.findOne({ userId });
@@ -128,7 +127,6 @@ const deleteCart = async (req, res) => {
       .json({ message: "Error deleting cart", error: error.message });
   }
 };
-
 
 const deleteCartItem = async (req, res) => {
   const { userId, productId } = req.body;
