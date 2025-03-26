@@ -1,6 +1,6 @@
 import "./App.css";
-import { Navigate, Route, Routes } from "react-router-dom";
-import { useEffect } from "react";
+import { Navigate, Route, Routes, useLocation } from "react-router-dom";
+import { useEffect, useState } from "react";
 import Login from "./Pages/Login";
 import Signup from "./Pages/Signup";
 import Home from "./Pages/Home";
@@ -15,17 +15,32 @@ import ProductDetails from "./Pages/Components/ProductDetails";
 import Footer from "./Pages/Components/Footer";
 import { Toaster } from "react-hot-toast";
 import CartItems from "./Pages/Cart/CartItems";
+import Loader from "./Pages/Components/Loader";
 
 function App() {
   const role = localStorage.getItem("role");
+  const [loading, setLoading] = useState(true);
+  const location = useLocation();
 
   useEffect(() => {
+    const timer = setTimeout(() => {
+      setLoading(false);
+    }, 1000);
+
+    // Reset loading state when route changes
+    setLoading(true);
+
     const link = document.createElement("link");
     link.rel = "stylesheet";
     link.href =
       "https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400..900;1,400..900&family=Roboto:ital,wght@0,100..900;1,100..900&display=swap";
     document.head.appendChild(link);
-  }, []);
+    return () => clearTimeout(timer);
+  }, [location.pathname]);
+
+  if (loading) {
+    return <Loader />;
+  }
 
   return (
     <div className="min-h-screen flex flex-col">

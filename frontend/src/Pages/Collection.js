@@ -6,6 +6,7 @@ import toast from "react-hot-toast";
 import { useDispatch, useSelector } from "react-redux";
 import { fetchProducts } from "../redux/slices/productSlice";
 import { addToCart } from "../redux/slices/cartSlice";
+
 const Collection = () => {
   const [filteredProducts, setFilteredProducts] = useState([]);
   const Navigate = useNavigate();

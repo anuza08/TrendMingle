@@ -7,8 +7,9 @@ import BestSellerSection from "./Components/BestSellerSection";
 import HomePageButtom from "./Components/homePageButtom";
 import banner2 from "../Assests/images/banner2.jpg";
 import NewlyAddedProducts from "./Components/NewlyAddedProducts";
-import Footer from "./Components/Footer";
 import Chatbot from "./Chatbot";
+import { LazyLoadImage } from "react-lazy-load-image-component";
+import "react-lazy-load-image-component/src/effects/blur.css";
 
 const Home = () => {
   return (
@@ -18,10 +19,13 @@ const Home = () => {
           <Sidebar />
         </div>
         <div className="w-full lg:w-1/2 flex justify-center mt-3 sm:mt-2 md:mt-2">
-          <img
+          <LazyLoadImage
             src={image1}
             alt="Banner"
-            className="w-[90%] sm:w-[80%] md:w-[70%] lg:w-[800px] h-auto object-cover "
+            effect="blur"
+            className="w-[90%] sm:w-[80%] md:w-[70%] lg:w-[800px] h-auto object-cover"
+            width="100%"
+            height="auto"
           />
         </div>
       </div>
@@ -47,7 +51,14 @@ const Home = () => {
       </div>
       <BestSellerSection />
 
-      <img className="px-36" src={banner2} alt="Banner2" />
+      <LazyLoadImage
+        src={banner2}
+        alt="Banner2"
+        effect="blur"
+        className="px-36 w-full"
+        width="100%"
+        height="auto"
+      />
 
       <hr className="border-t border-gray-300 mx-24 my-4" />
       <CategoryBreaker name={"OUR PRODUCTS"} />
