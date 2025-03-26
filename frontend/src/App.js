@@ -28,10 +28,11 @@ function App() {
   }, []);
 
   return (
-    <>
-      <div>
-        <Toaster position="top-center" />
-        {role === "user" && <Navbar />}
+    <div className="min-h-screen flex flex-col">
+      <Toaster position="top-center" />
+      {role === "user" && <Navbar />}
+
+      <main className="flex-grow">
         <Routes>
           {role === "user" && (
             <Route path="*" element={<Navigate to="/home" replace />} />
@@ -57,9 +58,10 @@ function App() {
             <Route path="dashboard" element={<AdminDashboard />} />
           </Route>
         </Routes>
-        <Footer />
-      </div>
-    </>
+      </main>
+
+      <Footer />
+    </div>
   );
 }
 

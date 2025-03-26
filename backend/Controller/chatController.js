@@ -1,5 +1,5 @@
 const ChatService = require("../Services/chatService");
-
+const ProductModel = require("../Models/Product");
 const chatController = {
   handleMessage: async (req, res) => {
     try {
@@ -9,7 +9,14 @@ const chatController = {
       let response;
       switch (intent) {
         case "product_search":
-          const searchQuery = await ChatService.extractSearchQuery(message);
+          let searchQuery = await ChatService.extractSearchQuery(message);
+          if (!searchQuery || searchQuery.toLowerCase().includes("all")) {
+            const allProducts = await ProductModel.find().limit(50); // Adjust limit as needed
+            return res.json(
+              chatController.formatProductResponse(allProducts, "all products")
+            );
+          }
+
           const products = await ChatService.searchProducts(searchQuery);
           response =
             products.length > 0

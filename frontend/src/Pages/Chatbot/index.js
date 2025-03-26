@@ -12,11 +12,9 @@ function Chatbot() {
 
   const sendMessage = async () => {
     if (!input.trim()) return;
-
-    // Add user message immediately
     setMessages((prev) => [...prev, { sender: "user", text: input }]);
     setInput("");
-    setIsTyping(true); // Show typing indicator
+    setIsTyping(true);
 
     try {
       const response = await axios.post("http://localhost:8080/api/chat", {

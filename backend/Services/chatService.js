@@ -6,19 +6,23 @@ const openai = new OpenAI({
   baseURL: "https://openrouter.ai/api/v1",
   apiKey: process.env.DEEPSEEK_API_KEY,
   defaultHeaders: {
-    "HTTP-Referer": process.env.YOUR_SITE_URL, // Optional for OpenRouter rankings
-    "X-Title": process.env.YOUR_APP_NAME, // Optional for OpenRouter rankings
+    "HTTP-Referer": process.env.YOUR_SITE_URL,
+    "X-Title": process.env.YOUR_APP_NAME,
   },
 });
 class ChatService {
   static async searchProducts(query) {
+    if (!query || query.trim() === "") {
+      return await ProductModel.find().limit(50);
+    }
+
     return await ProductModel.find({
       $or: [
         { productName: { $regex: query, $options: "i" } },
         { productDescription: { $regex: query, $options: "i" } },
         { category: { $regex: query, $options: "i" } },
       ],
-    }).limit(5);
+    }).limit(50);
   }
 
   static async getCartDetails(userId) {
