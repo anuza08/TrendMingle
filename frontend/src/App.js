@@ -27,7 +27,7 @@ function App() {
       setLoading(false);
     }, 1000);
 
-    // Reset loading state when route changes
+   
     setLoading(true);
 
     const link = document.createElement("link");
